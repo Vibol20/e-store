@@ -1148,6 +1148,108 @@
         text-align: center;
       }
     }
+
+    /* ---------- MOBILE RESPONSIVE FIXES ---------- */
+    img { max-width: 100%; }
+    body { overflow-x: clip; }
+    .section-title { scroll-margin-top: 90px; }
+    .ci { grid-template-columns: 64px minmax(0, 1fr); }
+    .ci__t { overflow-wrap: anywhere; }
+
+    /* no sticky "hover lift" on touch screens */
+    @media (hover: none) {
+      .album:hover, .accessory:hover, .lightstick:hover { transform: none; box-shadow: none; }
+      .album:hover .product__img, .accessory:hover .product__img, .lightstick:hover .product__img { transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      .announcement-bar { font-size: .72rem; padding: 6px 10px; }
+
+      /* navbar: row 1 = logo + search + cart, row 2 = scrollable menu */
+      .navbar {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        column-gap: 10px;
+        row-gap: 0;
+        padding: 10px 12px;
+      }
+      .navbar .logo { grid-column: 1; grid-row: 1; font-size: 1.15rem; }
+      .navbar .user-actions { display: contents; }
+      .search-input {
+        grid-column: 2; grid-row: 1;
+        width: 100%; max-width: none; min-width: 0;
+        font-size: 16px;            /* stops iOS zoom on focus */
+        padding: 9px 12px;
+      }
+      .cart-btn { grid-column: 3; grid-row: 1; padding: 10px 12px; }
+      .navbar .nav-links {
+        grid-column: 1 / -1; grid-row: 2;
+        margin-top: 8px; padding-top: 6px;
+        gap: 0; flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .nav-links a { flex: 0 0 auto; white-space: nowrap; padding: 8px 8px; font-size: .85rem; }
+      .nav-links a:first-child { margin-left: auto; }
+      .nav-links a:last-child { margin-right: auto; }
+      .section-title { scroll-margin-top: 120px; }
+
+      .collection-header { padding: 20px 16px; }
+      .collection-header p { font-size: .85rem; }
+
+      /* product grid: always 2 columns */
+      .product-container { padding: 18px 10px; gap: 26px; }
+      .section-title { font-size: 1.1rem; }
+      .kpop { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .product__img { height: auto; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; }
+      .product__title {
+        font-size: .78rem; padding: 8px 8px 4px; min-height: 0;
+        display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .product__price { font-size: .82rem; padding: 4px 8px; }
+      .order-btn { width: calc(100% - 16px); margin: 6px 8px 0; padding: 11px 0; font-size: .75rem; }
+      .product__badge { font-size: 10px; padding: 2px 7px; top: 6px; right: 6px; }
+
+      /* product detail page */
+      #detail { padding: 14px 12px 40px; }
+      .crumbs { font-size: .8rem; margin-bottom: 14px; }
+      .pd { gap: 16px; }
+      .pd__img { object-fit: contain; }
+      .pd__title { font-size: 1.2rem; }
+      .pd__qty button { width: 44px; height: 44px; }
+      .pd__qty span { width: 44px; }
+      .related-title { margin: 32px 0 12px; }
+      .related { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .related__item { padding: 8px; }
+      .related__item img { height: auto; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; }
+
+      /* cart drawer = full screen */
+      #cartDrawer { width: 100%; height: 100%; height: 100dvh; }
+      .drawer__head { padding: 14px 16px; }
+      #cartItems { padding: 6px 16px; }
+      .drawer__foot { padding: 14px 16px 18px; }
+
+      /* checkout = full-screen sheet */
+      #checkout { padding: 0; }
+      .co { max-width: none; min-height: 100%; min-height: 100dvh; border-radius: 0; padding: 18px 14px 28px; }
+      .co h2 { font-size: 1.15rem; padding-right: 36px; }
+      .co input[type=text], .co input[type=email], .co input[type=tel] { font-size: 16px; padding: 12px; }
+      .co .x-btn { top: 8px; right: 10px; width: 40px; height: 40px; }
+      .pay-opt { padding: 12px; font-size: .85rem; }
+      #cardFields .two { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .btn-main { padding: 15px; }
+
+      .site-footer { padding: 30px 16px 16px; }
+    }
+
+    @media (max-width: 360px) {
+      .kpop, .related { gap: 8px; }
+      .logo { font-size: 1.05rem; }
+      .cart-btn { padding: 9px 10px; font-size: .8rem; }
+    }
   </style>
 </head>
 
