@@ -1,0 +1,2263 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albums, Accessories & Light Sticks Collection | K-Pop Store</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #f7f7f7;
+      color: #1a1a1a;
+      counter-reset: cart-count 0;
+    }
+
+    /* Checkboxes: visually hidden (NOT display:none, so the CSS counter still counts them) */
+    .cart-toggle {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .cart-toggle:checked {
+      counter-increment: cart-count 1;
+    }
+
+    .cart-btn-counter::after {
+      content: counter(cart-count);
+    }
+
+    .announcement-bar {
+      background-color: #111;
+      color: #fff;
+      text-align: center;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      background-color: #fff;
+      border-bottom: 1px solid #e5e5e5;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: #e60023;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a.active,
+    .nav-links a:hover {
+      color: #e60023;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .cart-btn {
+      text-decoration: none;
+      background-color: #111;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .collection-header {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: #fff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .collection-header h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin-bottom: 8px;
+    }
+
+    .collection-header p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .product-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+      gap: 40px;
+    }
+
+    .section-title {
+      width: 100%;
+      max-width: 1200px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #111;
+      border-bottom: 2px solid #e5e5e5;
+      padding-bottom: 10px;
+      margin-bottom: -10px;
+    }
+
+    .kpop {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .album,
+    .accessory,
+    .lightstick {
+      position: relative;
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-bottom: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .album:hover,
+    .accessory:hover,
+    .lightstick:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .product__img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .product__title {
+      padding: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #111827;
+      text-align: center;
+      overflow: hidden;
+      min-height: 2.8em;
+    }
+
+    .product__price {
+      color: #e60023;
+      text-align: center;
+      padding: 6px 12px;
+      margin-top: auto;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .order-btn {
+      display: block;
+      text-align: center;
+      width: calc(100% - 24px);
+      margin: 6px 12px 0 12px;
+      padding: 10px 0;
+      background-color: #111;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      user-select: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .order-btn:hover {
+      background-color: #e60023;
+    }
+
+    .order-btn:active {
+      transform: scale(0.98);
+    }
+
+    .order-btn::after {
+      content: "ORDER NOW";
+    }
+
+    .cart-toggle:checked+.album .order-btn,
+    .cart-toggle:checked+.accessory .order-btn,
+    .cart-toggle:checked+.lightstick .order-btn {
+      background-color: #16a34a;
+    }
+
+    .cart-toggle:checked+.album .order-btn::after,
+    .cart-toggle:checked+.accessory .order-btn::after,
+    .cart-toggle:checked+.lightstick .order-btn::after {
+      content: "ADDED ✓";
+    }
+
+    .product__badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ef4444;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: bold;
+      z-index: 10;
+    }
+
+    /* ---------- PRODUCT DETAIL PAGE ---------- */
+    body.show-detail main.product-container,
+    body.show-detail .collection-header {
+      display: none;
+    }
+
+    #detail {
+      display: none;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 15px 50px;
+    }
+
+    body.show-detail #detail {
+      display: block;
+    }
+
+    .crumbs {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .crumbs a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .crumbs a:hover {
+      color: #e60023;
+    }
+
+    .pd {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .pd__img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+
+    .pd__badge {
+      display: inline-block;
+      background: #3b3bbf;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 22px;
+      margin-bottom: 12px;
+    }
+
+    .pd__title {
+      font-size: 1.5rem;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .pd__price {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .pd__qty {
+      display: inline-flex;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+
+    .pd__qty button {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      background: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .pd__qty span {
+      width: 40px;
+      display: grid;
+      place-items: center;
+    }
+
+    .pd__add {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 4px;
+      background: #ff0055;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .pd__add:hover {
+      background: #d90048;
+    }
+
+    .pd__add.added {
+      background: #16a34a;
+    }
+
+    .pd__desc {
+      margin-top: 24px;
+      border-top: 1px solid #ddd;
+      padding-top: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .pd__desc h4 {
+      margin-bottom: 8px;
+    }
+
+    .related-title {
+      text-align: center;
+      margin: 50px 0 16px;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    .related {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .related__item {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .related__item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .related__item p {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin: 8px 0 4px;
+    }
+
+    .related__item span {
+      font-size: 0.85rem;
+    }
+
+    /* ---------- MEDIA QUERIES ---------- */
+    @media (max-width: 900px) {
+      .navbar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #f0f0f0;
+        justify-content: space-around;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .pd {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 12px 15px;
+      }
+
+      .user-actions {
+        gap: 6px;
+      }
+
+      .search-input {
+        width: 120px;
+      }
+
+      .kpop {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+      }
+
+      .product__img {
+        height: 160px;
+      }
+
+      .product__title {
+        font-size: 0.8rem;
+        padding: 8px;
+      }
+
+      .product__price {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+      }
+
+      .order-btn {
+        padding: 8px 0;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ---------- CART DRAWER + CHECKOUT ---------- */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+      z-index: 200;
+    }
+
+    #overlay.on {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #cartDrawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: min(400px, 100%);
+      background: #fff;
+      z-index: 210;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .25s;
+    }
+
+    #cartDrawer.on {
+      transform: none;
+    }
+
+    .drawer__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .x-btn {
+      border: 0;
+      background: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    #cartItems {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 20px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: #666;
+      padding: 40px 0;
+    }
+
+    .ci {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .ci img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .ci__t {
+      font-size: .82rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .ci__row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+    }
+
+    .ci__q {
+      display: inline-flex;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .ci__q button {
+      width: 26px;
+      height: 26px;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+
+    .ci__q span {
+      width: 28px;
+      display: grid;
+      place-items: center;
+    }
+
+    .ci__rm {
+      margin-left: auto;
+      border: 0;
+      background: none;
+      color: #e60023;
+      cursor: pointer;
+      font-size: .8rem;
+    }
+
+    .drawer__foot {
+      padding: 16px 20px;
+      border-top: 1px solid #e5e5e5;
+      font-size: .9rem;
+    }
+
+    .tot {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .tot.big {
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin: 10px 0 14px;
+    }
+
+    .btn-main {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 6px;
+      background: #e60023;
+      color: #fff;
+      font-weight: 800;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    .btn-main:hover {
+      background: #c4001d;
+    }
+
+    .btn-main:disabled {
+      background: #bbb;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      font-size: .75rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    #checkout {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: none;
+      overflow-y: auto;
+      padding: 20px 12px;
+    }
+
+    #checkout.on {
+      display: block;
+    }
+
+    .co {
+      background: #fff;
+      max-width: 720px;
+      margin: 0 auto;
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .co .x-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+    }
+
+    .co h2 {
+      margin-bottom: 16px;
+    }
+
+    .co h3 {
+      font-size: 1rem;
+      margin: 18px 0 8px;
+    }
+
+    .co label.f {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .co input[type=text],
+    .co input[type=email],
+    .co input[type=tel] {
+      display: block;
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: .9rem;
+    }
+
+    .co .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pay-opt {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    .co-sum {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: .85rem;
+      margin-top: 16px;
+    }
+
+    .co-sum div.l {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    #formErr {
+      color: #e60023;
+      font-size: .85rem;
+      margin: 12px 0 0;
+      min-height: 1.2em;
+    }
+
+    .done {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .done .tick {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: #fff;
+      font-size: 2rem;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+    }
+
+    @media (max-width: 600px) {
+      .co .two {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    :root {
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 4px 0;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      height: 2px;
+      width: 100%;
+      background: #e60023;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s var(--ease);
+    }
+
+    .nav-links a.active::after,
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .album,
+    .accessory,
+    .lightstick {
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+      isolation: isolate;
+    }
+
+    .product__img {
+      transition: transform .5s var(--ease);
+    }
+
+    .album:hover .product__img,
+    .accessory:hover .product__img,
+    .lightstick:hover .product__img {
+      transform: scale(1.07);
+    }
+
+    .product__badge {
+      animation: badgePop .6s var(--ease) both;
+    }
+
+    .will-reveal {
+      opacity: 0;
+    }
+
+    .reveal-in {
+      animation: rise .6s var(--ease) backwards;
+      animation-delay: var(--d, 0s);
+    }
+
+    body.show-detail #detail {
+      animation: fadeUp .45s var(--ease);
+    }
+
+    .pd__img {
+      animation: zoomIn .6s var(--ease) backwards;
+    }
+
+    .related__item {
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .related__item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, .1);
+    }
+
+    .cart-btn {
+      transition: background-color .2s, transform .2s var(--ease);
+    }
+
+    .cart-btn:hover {
+      background-color: #e60023;
+    }
+
+    .cart-btn.bump {
+      animation: bump .45s var(--ease);
+    }
+
+    .cart-toggle:checked+.album .order-btn,
+    .cart-toggle:checked+.accessory .order-btn,
+    .cart-toggle:checked+.lightstick .order-btn {
+      animation: added .4s var(--ease);
+    }
+
+    #cartDrawer {
+      transition: transform .4s var(--ease);
+    }
+
+    #checkout .co {
+      animation: fadeUp .4s var(--ease);
+    }
+
+    .ci {
+      animation: fadeUp .35s var(--ease);
+    }
+
+    .done .tick {
+      animation: pop .5s var(--ease);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(.97);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(.94);
+      }
+    }
+
+    @keyframes badgePop {
+      0% {
+        transform: scale(0);
+      }
+
+      70% {
+        transform: scale(1.15);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bump {
+      0% {
+        transform: scale(1);
+      }
+
+      40% {
+        transform: scale(1.18);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes added {
+      0% {
+        transform: scale(1);
+      }
+
+      40% {
+        transform: scale(1.06);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0);
+      }
+
+      70% {
+        transform: scale(1.15);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      .will-reveal {
+        opacity: 1;
+      }
+    }
+
+    /* ---------- NAV CENTERING ---------- */
+    .navbar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+
+    .navbar .logo {
+      justify-self: start;
+    }
+
+    .navbar .nav-links {
+      justify-self: center;
+    }
+
+    .navbar .user-actions {
+      justify-self: end;
+    }
+
+    @media (max-width: 900px) {
+      .navbar {
+        grid-template-columns: auto 1fr;
+      }
+
+      .navbar .nav-links {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: stretch;
+        justify-content: center;
+        gap: 28px;
+      }
+    }
+
+    /* ---------- SEARCH ---------- */
+    .search-hide {
+      display: none !important;
+    }
+
+    #noResults {
+      display: none;
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+      padding: 50px 20px;
+      color: #555;
+      background: #fff;
+      border: 1px dashed #ccc;
+      border-radius: 12px;
+      animation: fadeUp .35s var(--ease);
+    }
+
+    #noResults.on {
+      display: block;
+    }
+
+    #noResults strong {
+      color: #111;
+    }
+
+    .search-input:focus {
+      border-color: #e60023;
+      box-shadow: 0 0 0 3px rgba(230, 0, 35, .12);
+    }
+
+    .search-input {
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .site-footer {
+      background: #111;
+      color: #bbb;
+      margin-top: 40px;
+      padding: 40px 5% 20px;
+      font-size: 0.9rem;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 30px;
+    }
+
+    .footer-brand .logo {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .footer-brand p {
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .site-footer h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .site-footer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .site-footer a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-footer a:hover {
+      color: #e60023;
+    }
+
+    .pay-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pay-tags span {
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      color: #ddd;
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 30px auto 0;
+      padding-top: 16px;
+      border-top: 1px solid #2a2a2a;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    @media (max-width: 800px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="announcement-bar">All album sales count towards <strong>Hanteo & Circle Charts</strong></div>
+
+  <header class="navbar">
+    <div class="logo">E <span>STORE</span></div>
+    <nav class="nav-links">
+      <a href="#" class="active" id="navHome">Home</a>
+      <a href="#albums">Albums</a>
+      <a href="#accessories">Accessories</a>
+      <a href="#lightsticks">Light Sticks</a>
+    </nav>
+    <div class="user-actions">
+      <input type="search" id="searchInput" placeholder="Search albums, artists..." class="search-input"
+        aria-label="Search products" autocomplete="off" />
+      <a href="#" class="cart-btn" id="cartBtn">Cart (<span id="cartCount">0</span>)</a>
+    </div>
+  </header>
+
+  <div class="collection-header">
+    <h1>K-Pop Official Shop</h1>
+    <p>Shop official CD albums, photocards, light sticks, and pre-order benefits.</p>
+  </div>
+
+  <main class="product-container">
+    <h2 class="section-title" id="albums">💿 K-Pop Albums</h2>
+    <div class="kpop">
+      <input type="checkbox" id="item1" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img1.jpg"
+          alt="TREASURE 4th MINI ALBUM [NEW WAV] RAW VER" />
+        <h3 class="product__title">TREASURE 4th MINI ALBUM [NEW WAV] RAW VER</h3>
+        <h4 class="product__price">Price: 10.36$ per person</h4><label for="item1" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item2" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img2.png"
+          alt="TREASURE - 3RD MINI ALBUM [LOVE PULSE] SPORTY VER." />
+        <h3 class="product__title">TREASURE - 3RD MINI ALBUM [LOVE PULSE] SPORTY VER.</h3>
+        <h4 class="product__price">Price: 10.36$</h4><label for="item2" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item3" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img3.jpg"
+          alt="[Ktown4u Special Gift] TREASURE ARCHIVE : TREASURE 6th ANNIVERSARY." />
+        <h3 class="product__title">[Ktown4u Special Gift] TREASURE ARCHIVE : TREASURE 6th ANNIVERSARY.</h3>
+        <h4 class="product__price">Price: 29.26$</h4><label for="item3" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item4" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img4.png"
+          alt="TREASURE - 3RD MINI ALBUM [LOVE PULSE] METAL VER." />
+        <h3 class="product__title">TREASURE - 3RD MINI ALBUM [LOVE PULSE] METAL VER.</h3>
+        <h4 class="product__price">Price: 15.29$</h4><label for="item4" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item5" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img5.jpg"
+          alt="TREASURE 4th MINI ALBUM [NEW WAV] RED VER." />
+        <h3 class="product__title">TREASURE 4th MINI ALBUM [NEW WAV] RED VER.</h3>
+        <h4 class="product__price">Price: 15.29$</h4><label for="item5" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item6" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img8.jpg"
+          alt="TREASURE 4th MINI ALBUM [NEW WAV] ICE VER." />
+        <h3 class="product__title">TREASURE 4th MINI ALBUM [NEW WAV] ICE VER.</h3>
+        <h4 class="product__price">Price: 15.29$</h4><label for="item6" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item7" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img7.png"
+          alt="TREASURE - 3RD MINI ALBUM [LOVE PULSE] STREET VER." />
+        <h3 class="product__title">TREASURE - 3RD MINI ALBUM [LOVE PULSE] STREET VER.</h3>
+        <h4 class="product__price">Price: 15.29$</h4><label for="item7" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item8" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img9.webp"
+          alt="TREASURE - PLEASURE [Special Mini Album]" />
+        <h3 class="product__title">TREASURE - PLEASURE [Special Mini Album]</h3>
+        <h4 class="product__price">Price: 12.29$</h4><label for="item8" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item9" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img10.webp"
+          alt="Stray Kids - SKZ IT TAPE 'DO IT' [Accordion Ver.]" />
+        <h3 class="product__title">Stray Kids - SKZ IT TAPE 'DO IT' [Accordion Ver.]</h3>
+        <h4 class="product__price">Price: 13.99$</h4><label for="item9" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item10" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img6.webp"
+          alt="[PRE-ORDER] &TEAM - Mark on Me [2nd KR Mini Album - SOLO Ver.]" />
+        <h3 class="product__title">[PRE-ORDER] &TEAM - Mark on Me [2nd KR Mini Album - SOLO Ver.]</h3>
+        <h4 class="product__price">Price: 12.99$</h4><label for="item10" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item11" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img11.webp"
+          alt="NCT 127 - Fact Check [5th Album - Exhibit Ver.]" />
+        <h3 class="product__title">NCT 127 - Fact Check [5th Album - Exhibit Ver.]</h3>
+        <h4 class="product__price">Price: 11.99$</h4><label for="item11" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item12" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/img12.webp" alt="SEVENTEEN - FML [10th Mini Album]" />
+        <h3 class="product__title">SEVENTEEN - FML [10th Mini Album]</h3>
+        <h4 class="product__price">Price: 21.99$</h4><label for="item12" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item38" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/a17.webp" alt="Stray Kids - THIS & THAT [10th Mini Album - & Ver.]" />
+        <h3 class="product__title">Stray Kids - THIS & THAT [10th Mini Album - & Ver.]</h3>
+        <h4 class="product__price">Price: 11.99$</h4><label for="item38" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item39" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="./img/a18.webp" alt="ATEEZ - GOLDEN HOUR : Part.4 [13th Mini Album - POCA Ver.]" />
+        <h3 class="product__title">ATEEZ - GOLDEN HOUR : Part.4 [13th Mini Album - POCA Ver.]</h3>
+        <h4 class="product__price">Price: 13.99$</h4><label for="item39" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+
+      <input type="checkbox" id="item40" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://shop.newjeans-official.us/cdn/shop/files/M02_BunnyBeachBagver._packshot_sq_e.jpg?v=1688058148&width=2000" alt="NewJeans - Get Up [2nd EP] Bunny Beach Bag Ver." />
+        <h3 class="product__title">NewJeans - Get Up [2nd EP] Bunny Beach Bag Ver.</h3>
+        <h4 class="product__price">Price: 22.99$</h4><label for="item40" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item41" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://shop.le-sserafim.us/cdn/shop/products/2ndminialbum.png?v=1680036462" alt="LE SSERAFIM - ANTIFRAGILE [2nd Mini Album]" />
+        <h3 class="product__title">LE SSERAFIM - ANTIFRAGILE [2nd Mini Album]</h3>
+        <h4 class="product__price">Price: 14.99$</h4><label for="item41" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item42" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://nolae.eu/cdn/shop/products/ive-ive-ive-1st-full-album-nolae-433144.jpg?v=1681816581&width=1024" alt="IVE - I&#x27;VE IVE [1st Album]" />
+        <h3 class="product__title">IVE - I&#x27;VE IVE [1st Album]</h3>
+        <h4 class="product__price">Price: 15.49$</h4><label for="item42" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item43" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://nolae.eu/cdn/shop/products/aespa-my-world-3rd-mini-album-nolae-286950.jpg?v=1682686275&width=500" alt="aespa - MY WORLD [3rd Mini Album]" />
+        <h3 class="product__title">aespa - MY WORLD [3rd Mini Album]</h3>
+        <h4 class="product__price">Price: 14.49$</h4><label for="item43" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item44" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://munwa.fr/cdn/shop/files/TXT-THENAMECHAPTERFREEFALL_WeverseAlbumsVer._MunwaBoutiqueKpop.webp?v=1759751899" alt="TXT - The Name Chapter: FREEFALL [Album]" />
+        <h3 class="product__title">TXT - The Name Chapter: FREEFALL [Album]</h3>
+        <h4 class="product__price">Price: 16.99$</h4><label for="item44" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item45" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://cf095e.myshopify.com/cdn/shop/files/enhypen-romance-untold-2nd-album-main-image.jpg" alt="ENHYPEN - ROMANCE : UNTOLD [2nd Album]" />
+        <h3 class="product__title">ENHYPEN - ROMANCE : UNTOLD [2nd Album]</h3>
+        <h4 class="product__price">Price: 15.99$</h4><label for="item45" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item46" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://www.ktown4u.com/goods_files/SH0164/goods_images/000094/GD00093699.default.1.jpg" alt="(G)I-DLE - I feel [6th Mini Album]" />
+        <h3 class="product__title">(G)I-DLE - I feel [6th Mini Album]</h3>
+        <h4 class="product__price">Price: 13.99$</h4><label for="item46" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item47" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://kpopusaonline.com/cdn/shop/files/nmixx-albumm-1.png?v=1739263447" alt="NMIXX - expérgo [3rd Mini Album]" />
+        <h3 class="product__title">NMIXX - expérgo [3rd Mini Album]</h3>
+        <h4 class="product__price">Price: 13.49$</h4><label for="item47" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item48" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://munwa.fr/cdn/shop/files/ITZY_-_CHECKMATE_SPECIAL_EDITION_Munwa.webp?v=1770373516" alt="ITZY - CHECKMATE [Mini Album]" />
+        <h3 class="product__title">ITZY - CHECKMATE [Mini Album]</h3>
+        <h4 class="product__price">Price: 12.99$</h4><label for="item48" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item49" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://numikorea.com/cdn/shop/files/P0000LLM.jpg?v=1761388589" alt="BLACKPINK - BORN PINK [2nd Album]" />
+        <h3 class="product__title">BLACKPINK - BORN PINK [2nd Album]</h3>
+        <h4 class="product__price">Price: 24.99$</h4><label for="item49" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item50" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://nolae.eu/cdn/shop/files/twice-with-you-th-13th-mini-album-nolae-141282_grande.jpg?v=1708090109" alt="TWICE - With YOU-th [13th Mini Album]" />
+        <h3 class="product__title">TWICE - With YOU-th [13th Mini Album]</h3>
+        <h4 class="product__price">Price: 14.99$</h4><label for="item50" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item51" class="cart-toggle" />
+      <div class="album"><img class="product__img" src="https://soojib.com/cdn/shop/files/RIIZE_1st_Mini_Album_-_RIIZING_Collect_Book_Ver._Cover_2.webp?crop=center&height=645&v=1767523790&width=645" alt="RIIZE - RIIZING [1st Mini Album]" />
+        <h3 class="product__title">RIIZE - RIIZING [1st Mini Album]</h3>
+        <h4 class="product__price">Price: 12.99$</h4><label for="item51" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+    </div>
+
+    <h2 class="section-title" id="accessories">✨ Official Accessories & Merch</h2>
+    <div class="kpop">
+      <input type="checkbox" id="item13" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a1.webp" alt="Keyring" />
+        <h3 class="product__title">NCT 127 - SOM-MOONG-CHILL Keyring [2025 NCT 127 'SOM-MOONG-CHILL' Official MD]</h3>
+        <h4 class="product__price">Price: 18.99$</h4><label for="item13" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item14" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a6.webp" alt="Keyring" />
+        <h3 class="product__title">Stray Kids - Plush Keyring ICECREAM Ver. [THIS & THAT POP-UP Store Official MD]</h3>
+        <h4 class="product__price">Price: 18.99$</h4><label for="item14" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item15" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a7.webp" alt="PVC Bag" />
+        <h3 class="product__title">Stray Kids - PVC Bag [6th Fanmeeting 'STAY in Our Little House' Official MD]</h3>
+        <h4 class="product__price">Price: 74.99$</h4><label for="item15" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item16" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a8.webp" alt="Hoodie Zip-Up Set" />
+        <h3 class="product__title">TAEYONG - Hoodie Zip-Up Set [2026 TAEYONG The 1st Album 'WYLD' Official MD]</h3>
+        <h4 class="product__price">Price: 89.99$</h4><label for="item16" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item17" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a2.webp" alt="Random Trading Card" />
+        <h3 class="product__title">ATEEZ - Random Trading Card [ANITEEZ IN COLOR Official MD]</h3>
+        <h4 class="product__price">Price: 8.99$</h4><label for="item17" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item18" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a3.webp" alt="Random Trading Card" />
+        <h3 class="product__title">Hearts2Hearts - Random Trading Card A Ver. [2nd Mini Album 'Lemon Tang' POP-UP
+          Official MD]</h3>
+        <h4 class="product__price">Price: 7.99$</h4><label for="item18" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item19" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a5.webp" alt="Trading Card" />
+        <h3 class="product__title">ITZY - Trading Card ['ALL IN, MIDZY' 5th Fan Meeting Official MD]</h3>
+        <h4 class="product__price">Price: 8.99$</h4><label for="item19" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item20" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a4.webp" alt="Wind Breaker Set" />
+        <h3 class="product__title">IRENE - Wind Breaker Set [2026 IRENE ASIA TOUR 'I-WILL' in SEOUL Official MD]</h3>
+        <h4 class="product__price">Price: 109.99$</h4><label for="item20" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item21" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="./img/a10.webp" alt="Treasure Tin Case" />
+        <h3 class="product__title">ATEEZ - Treasure Tin Case [ANITEEZ IN TREASURE Official MD]</h3>
+        <h4 class="product__price">Price: 19.99$</h4><label for="item21" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item33" class="cart-toggle" />
+      <div class="album">
+        <img class="product__img" src="./img/a12.webp"
+          alt="ATEEZ - MIGHTEEZ Random Trading Photocard Set [MIGHTEEZ Rock The Stage - U.S. Exclusive]" />
+        <h3 class="product__title">ATEEZ - MIGHTEEZ Random Trading Photocard Set [MIGHTEEZ Rock The Stage - U.S.
+          Exclusive]</h3>
+        <h4 class="product__price">Price: 5.99$</h4>
+        <label for="item33" class="order-btn"></label>
+        <span class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item34" class="cart-toggle" />
+      <div class="album">
+        <img class="product__img" src="./img/a13.webp"
+          alt="ATEEZ - MIGHTEEZ Reusable Bag [MIGHTEEZ Rock The Stage]" />
+        <h3 class="product__title">ATEEZ - MIGHTEEZ Reusable Bag [MIGHTEEZ Rock The Stage]</h3>
+        <h4 class="product__price">Price: 10.99$</h4>
+        <label for="item34" class="order-btn"></label>
+        <span class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item35" class="cart-toggle" />
+      <div class="album">
+        <img class="product__img" src="./img/a14.webp"
+          alt="ATEEZ - MIGHTEEZ Weather Fairy Plush Keyring [MIGHTEEZ Berry Breezy Fairy]" />
+        <h3 class="product__title">ATEEZ - MIGHTEEZ Weather Fairy Plush Keyring [MIGHTEEZ Berry Breezy Fairy]</h3>
+        <h4 class="product__price">Price: 24.99$</h4>
+        <label for="item35" class="order-btn"></label>
+        <span class="product__badge">PRE_ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item36" class="cart-toggle" />
+      <div class="album">
+        <img class="product__img" src="./img/a15.webp"
+          alt="ATEEZ - MIGHTEEZ PVC Photocard Holder [U.S. Exclusive]" />
+        <h3 class="product__title">ATEEZ - MIGHTEEZ PVC Photocard Holder [U.S. Exclusive]</h3>
+        <h4 class="product__price">Price: 14.99$</h4>
+        <label for="item36" class="order-btn"></label>
+        <span class="product__badge">PRE_ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item37" class="cart-toggle" />
+      <div class="album">
+        <img class="product__img" src="./img/a16.webp"
+          alt="ATEEZ - MIGHTEEZ Plush Keychain Blind Box [MIGHTEEZ HALLOWEEN - U.S. Exclusive]" />
+        <h3 class="product__title">ATEEZ - MIGHTEEZ Plush Keychain Blind Box [MIGHTEEZ HALLOWEEN - U.S. Exclusive]</h3>
+        <h4 class="product__price">Price: 25.99$</h4>
+        <label for="item37" class="order-btn"></label>
+        <span class="product__badge">IN-STOCK</span>
+      </div>
+      
+
+      <input type="checkbox" id="item52" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://images.squarespace-cdn.com/content/v1/5c3398ebaa49a1b1f53eabdf/1688038883247-OLVWOIYQ3F1P48TOAZ9Q/product.38646.168800396984755.jpg?format=1500w" alt="NewJeans - Bunny Beach Bag [Official MD]" />
+        <h3 class="product__title">NewJeans - Bunny Beach Bag [Official MD]</h3>
+        <h4 class="product__price">Price: 29.99$</h4><label for="item52" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item53" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://www.subkshop.com/cdn/shop/files/KakaoTalk_Image_2025-06-04-09-59-16_006.jpg?v=1749158419" alt="SEVENTEEN - Official Photocard Binder [Official MD]" />
+        <h3 class="product__title">SEVENTEEN - Official Photocard Binder [Official MD]</h3>
+        <h4 class="product__price">Price: 19.99$</h4><label for="item53" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item54" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://m.media-amazon.com/images/I/51LUWjndSKL._AC_UL450_SY450_QL70_.jpg" alt="BLACKPINK - Hoodie [BORN PINK Official MD]" />
+        <h3 class="product__title">BLACKPINK - Hoodie [BORN PINK Official MD]</h3>
+        <h4 class="product__price">Price: 54.99$</h4><label for="item54" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item55" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://www.kpopalbums.com/cdn/shop/files/e10fc1b6d4c1af9d97d61ec3bab445fe5571052ac7cb6fa8f0b95fc409d8c3fc_6758f61c-7e5e-4e56-ac74-6683df8af38b.jpg?v=1739521288" alt="TWICE - Acrylic Stand [Official MD]" />
+        <h3 class="product__title">TWICE - Acrylic Stand [Official MD]</h3>
+        <h4 class="product__price">Price: 9.99$</h4><label for="item55" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item56" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://kplaceshop.com/cdn/shop/files/le-sserafim-fims-club-photocard-holder-kkurochet-by-sakura-2nd-official-md-main-image_600x.webp?v=1764992664" alt="LE SSERAFIM - Photocard Holder Keyring [Official MD]" />
+        <h3 class="product__title">LE SSERAFIM - Photocard Holder Keyring [Official MD]</h3>
+        <h4 class="product__price">Price: 11.99$</h4><label for="item56" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item57" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://cf095e.myshopify.com/cdn/shop/files/ive-reusable-bag-show-what-i-am-world-tour-official-md-main-image.webp" alt="IVE - Tote Bag [Official MD]" />
+        <h3 class="product__title">IVE - Tote Bag [Official MD]</h3>
+        <h4 class="product__price">Price: 18.99$</h4><label for="item57" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item58" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://media.ktown4u.com/products/resize/thumbnail/2026/06/04/IrN77w.png" alt="aespa - Random Trading Card Set [Official MD]" />
+        <h3 class="product__title">aespa - Random Trading Card Set [Official MD]</h3>
+        <h4 class="product__price">Price: 7.99$</h4><label for="item58" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item59" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://i.ebayimg.com/images/g/-JYAAOSwQxZky43Q/s-l1200.jpg" alt="NCT DREAM - Plush Doll [Official MD]" />
+        <h3 class="product__title">NCT DREAM - Plush Doll [Official MD]</h3>
+        <h4 class="product__price">Price: 24.99$</h4><label for="item59" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item60" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://cokodive.com/cdn/shop/files/STICKER_SET_fe3eb093-5b5b-4e79-b30c-b8e53be480c3_720x.png?v=1753077285" alt="TXT - Sticker Pack [Official MD]" />
+        <h3 class="product__title">TXT - Sticker Pack [Official MD]</h3>
+        <h4 class="product__price">Price: 5.99$</h4><label for="item60" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item61" class="cart-toggle" />
+      <div class="accessory"><img class="product__img" src="https://kplaceshop.com/cdn/shop/files/enhypen-zip-up-hoodie-beside-enhypen-official-md-main-image_600x.png?v=1744756457" alt="ENHYPEN - Hoodie Zip-Up [Official MD]" />
+        <h3 class="product__title">ENHYPEN - Hoodie Zip-Up [Official MD]</h3>
+        <h4 class="product__price">Price: 49.99$</h4><label for="item61" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+    </div>
+
+    <h2 class="section-title" id="lightsticks">🔮 Official Light Sticks</h2>
+    <div class="kpop">
+      <input type="checkbox" id="item22" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l1.jpg" alt="TREASURE Light Stick" />
+        <h3 class="product__title">TREASURE - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 54.99$</h4><label for="item22" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item23" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l2.jpg" alt="Stray Kids Light Stick" />
+        <h3 class="product__title">Stray Kids - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 62.99$</h4><label for="item23" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item24" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l3.webp" alt="ATEEZ Light Stick" />
+        <h3 class="product__title">ATEEZ - Official Light Stick [Ver. 3]</h3>
+        <h4 class="product__price">Price: 59.99$</h4><label for="item24" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item25" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l4.webp" alt="ATEEZ Light Stick" />
+        <h3 class="product__title">ATEEZ - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 41.99$</h4><label for="item25" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item26" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l5.jpg" alt="TWICE Light Stick" />
+        <h3 class="product__title">TWICE - Official Light Stick [INFINITY ∞ - Ver. 3]</h3>
+        <h4 class="product__price">Price: 64.99$</h4><label for="item26" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item27" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l6.webp" alt="ENHYPEN Light Stick" />
+        <h3 class="product__title">ENHYPEN - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 69.99$</h4><label for="item27" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item28" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l7.jpg" alt="BTS Light Stick" />
+        <h3 class="product__title">BTS - Official Light Stick [MAP OF THE SOUL Special Edition]</h3>
+        <h4 class="product__price">Price: 69.99$</h4><label for="item28" class="order-btn"></label><span
+          class="product__badge">NEW</span>
+      </div>
+
+      <input type="checkbox" id="item29" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l8.webp" alt="G-DRAGON Light Stick" />
+        <h3 class="product__title">G-DRAGON - Official Mini Light Keyring (Black Ver.)</h3>
+        <h4 class="product__price">Price: 31.99$</h4><label for="item29" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item30" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l9.jpg" alt="IVE Light Stick" />
+        <h3 class="product__title">IVE - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 65.99$</h4><label for="item30" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item31" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l10.webp" alt="BLACKPINK Light Stick" />
+        <h3 class="product__title">BLACKPINK - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 59.99$</h4><label for="item31" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item32" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="./img/l11.jpg" alt="aespa Light Stick" />
+        <h3 class="product__title">aespa - Official Light Stick</h3>
+        <h4 class="product__price">Price: 58.99$</h4><label for="item32" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item62" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://m.media-amazon.com/images/I/51EiIqPDewL._AC_UL450_SY450_QL70_.jpg" alt="NewJeans - Official Light Stick [Bunny Bat]" />
+        <h3 class="product__title">NewJeans - Official Light Stick [Bunny Bat]</h3>
+        <h4 class="product__price">Price: 44.99$</h4><label for="item62" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item63" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://m.media-amazon.com/images/I/31M0lZXEIyL.jpg" alt="LE SSERAFIM - Official Light Stick" />
+        <h3 class="product__title">LE SSERAFIM - Official Light Stick</h3>
+        <h4 class="product__price">Price: 52.99$</h4><label for="item63" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item64" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://nolae.eu/cdn/shop/products/seventeen-official-light-stick-ver3-nolae-152047.webp?v=1692189361&width=1080" alt="SEVENTEEN - Official Light Stick [Carat Bong Ver. 3]" />
+        <h3 class="product__title">SEVENTEEN - Official Light Stick [Carat Bong Ver. 3]</h3>
+        <h4 class="product__price">Price: 56.99$</h4><label for="item64" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item65" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://afosto-cdn-01.afosto.com/atefn/product/400/1759232703-2024-04-22-10.47.26.jpg" alt="NCT DREAM - Official Light Stick" />
+        <h3 class="product__title">NCT DREAM - Official Light Stick</h3>
+        <h4 class="product__price">Price: 49.99$</h4><label for="item65" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item66" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://cdn11.bigcommerce.com/s-7uw7zc08qw/images/stencil/1280x1280/products/10800/18947/47c839ab883b75745c0dc6ce4ca076c8__76962.1716859792.png?c=2?imbypass=on" alt="NCT 127 - Official Light Stick" />
+        <h3 class="product__title">NCT 127 - Official Light Stick</h3>
+        <h4 class="product__price">Price: 54.99$</h4><label for="item66" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item67" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAoApUSACyaOC25QlyJjyK7IboyJnlM2M7JUoiTNueBTFhgKPJObP5CDs&s=10" alt="RIIZE - Official Light Stick" />
+        <h3 class="product__title">RIIZE - Official Light Stick</h3>
+        <h4 class="product__price">Price: 49.99$</h4><label for="item67" class="order-btn"></label><span
+          class="product__badge">PRE-ORDER</span>
+      </div>
+
+      <input type="checkbox" id="item68" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://m.media-amazon.com/images/I/61fYhA7pTbL.jpg" alt="(G)I-DLE - Official Light Stick" />
+        <h3 class="product__title">(G)I-DLE - Official Light Stick</h3>
+        <h4 class="product__price">Price: 47.99$</h4><label for="item68" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+
+      <input type="checkbox" id="item69" class="cart-toggle" />
+      <div class="lightstick"><img class="product__img" src="https://m.media-amazon.com/images/I/51nd0ZEll4L.jpg" alt="TXT - Official Light Stick [Ver. 2]" />
+        <h3 class="product__title">TXT - Official Light Stick [Ver. 2]</h3>
+        <h4 class="product__price">Price: 55.99$</h4><label for="item69" class="order-btn"></label><span
+          class="product__badge">IN-STOCK</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Product detail page (filled in by the script below) -->
+  <section id="detail" aria-live="polite"></section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">E <span>STORE</span></div>
+        <p>Your official K-Pop shop for albums, accessories and light sticks. All album purchases count towards Hanteo &amp; Circle Charts.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#albums" data-go>💿 Albums</a></li>
+          <li><a href="#accessories" data-go>✨ Accessories</a></li>
+          <li><a href="#lightsticks" data-go>🔮 Light Sticks</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Shipping</h4>
+        <ul>
+          <li>Flat $1.99 shipping</li>
+          <li>Free on orders $100+</li>
+          <li>Pre-order items ship on release</li>
+        </ul>
+      </div>
+      <div>
+        <h4>We accept</h4>
+        <div class="pay-tags">
+          <span>📱 KHQR</span>
+          <span>💳 Card</span>
+          <span>🚚 Cash on delivery</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="footYear"></span> E STORE. All rights reserved.</span>
+      <a href="#" id="toTop">↑ Back to top</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      document.getElementById("footYear").textContent = new Date().getFullYear();
+      document.getElementById("toTop").addEventListener("click", function (e) {
+        e.preventDefault();
+        history.pushState("", "", location.pathname);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      // footer shop links: leave the product page first, then jump to the section
+      document.querySelectorAll(".site-footer [data-go]").forEach(function (a) {
+        a.addEventListener("click", function () { document.body.classList.remove("show-detail"); });
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var detail = document.getElementById("detail");
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".album, .accessory, .lightstick"));
+
+      function data(card) {
+        var box = card.previousElementSibling;
+        return {
+          id: box.id, box: box,
+          img: card.querySelector(".product__img").src,
+          title: card.querySelector(".product__title").textContent.trim(),
+          price: card.querySelector(".product__price").textContent.replace("Price:", "").trim(),
+          badge: card.querySelector(".product__badge").textContent.trim(),
+          group: card.parentElement
+        };
+      }
+      function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+      function showList() { document.body.classList.remove("show-detail"); window.scrollTo(0, 0); }
+
+      function showProduct(id) {
+        var box = document.getElementById(id);
+        if (!box) return showList();
+        var card = box.nextElementSibling, p = data(card);
+
+        var related = cards.filter(function (c) { return c.parentElement === p.group && c !== card; })
+          .slice(0, 4).map(function (c) {
+            var r = data(c);
+            return '<div class="related__item" data-id="' + r.id + '"><img src="' + r.img + '" alt=""><p>' + esc(r.title) + '</p><span>' + esc(r.price) + '</span></div>';
+          }).join("");
+
+        detail.innerHTML =
+          '<nav class="crumbs" aria-label="Breadcrumb"><a href="#" data-home>Home</a> → <a href="#" data-home>All</a> → <span>' + esc(p.title) + '</span></nav>' +
+          '<div class="pd">' +
+          '<img class="pd__img" src="' + p.img + '" alt="' + esc(p.title) + '">' +
+          '<div>' +
+          '<span class="pd__badge">' + esc(p.badge) + '</span>' +
+          '<h1 class="pd__title">' + esc(p.title) + '</h1>' +
+          '<p class="pd__price">' + esc(p.price) + '</p>' +
+          '<div class="pd__qty"><button type="button" data-q="-1" aria-label="Decrease">−</button><span id="qty">1</span><button type="button" data-q="1" aria-label="Increase">+</button></div>' +
+          '<button type="button" class="pd__add' + (p.box.checked ? ' added' : '') + '">' + (p.box.checked ? 'ADDED ✓' : 'ADD TO CART') + '</button>' +
+          '<div class="pd__desc"><h4>Description</h4><p>Official K-Pop merchandise. All album purchases count towards Hanteo &amp; Circle Charts.</p></div>' +
+          '</div>' +
+          '</div>' +
+          '<h3 class="related-title">Related Items</h3><div class="related">' + related + '</div>';
+
+        document.body.classList.add("show-detail");
+        window.scrollTo(0, 0);
+
+        detail.querySelectorAll("[data-q]").forEach(function (b) {
+          b.onclick = function () { var q = document.getElementById("qty"); q.textContent = Math.max(1, +q.textContent + +b.dataset.q); };
+        });
+        var add = detail.querySelector(".pd__add");
+        add.onclick = function () {
+          window.Cart.add(p.id, +document.getElementById("qty").textContent);
+          add.classList.add("added"); add.textContent = "ADDED ✓";
+          setTimeout(function () { add.classList.remove("added"); add.textContent = "ADD TO CART"; }, 1500);
+          window.Cart.open();
+        };
+      }
+
+      cards.forEach(function (c) {
+        c.addEventListener("click", function (e) {
+          if (e.target.closest(".order-btn")) return;
+          location.hash = "product-" + data(c).id;
+        });
+      });
+
+      detail.addEventListener("click", function (e) {
+        if (e.target.closest("[data-home]")) { e.preventDefault(); history.pushState("", "", location.pathname); showList(); }
+        var rel = e.target.closest(".related__item");
+        if (rel) location.hash = "product-" + rel.dataset.id;
+      });
+
+      function route() {
+        var m = location.hash.match(/^#product-(item\d+)$/);
+        if (m) showProduct(m[1]);
+        else if (document.body.classList.contains("show-detail")) showList();
+      }
+      window.addEventListener("hashchange", route);
+      route();
+    })();
+  </script>
+
+  <!-- CART DRAWER -->
+  <div id="overlay"></div>
+  <aside id="cartDrawer" aria-label="Shopping cart">
+    <div class="drawer__head">
+      <h2>Your cart</h2><button class="x-btn" id="cartClose" aria-label="Close cart">×</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="drawer__foot">
+      <div class="tot"><span>Subtotal</span><span id="cSub">$0.00</span></div>
+      <div class="tot"><span>Shipping</span><span id="cShip">Free</span></div>
+      <p class="hint">Flat $1.99 shipping. Free on orders of $100 or more.</p>
+      <div class="tot big"><span>Total</span><span id="cTotal">$0.00</span></div>
+      <button class="btn-main" id="goCheckout" disabled>Checkout</button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT -->
+  <div id="checkout" role="dialog" aria-modal="true" aria-label="Checkout">
+    <div class="co">
+      <button class="x-btn" id="coClose" aria-label="Close checkout">×</button>
+      <div id="coForm">
+        <h2>Checkout</h2>
+        <form id="checkoutForm" novalidate>
+          <h3>Contact & shipping</h3>
+          <div class="two">
+            <label class="f">Full name<input type="text" id="fName" autocomplete="name" /></label>
+            <label class="f">Email<input type="email" id="fEmail" autocomplete="email" /></label>
+          </div>
+          <label class="f">Phone<input type="tel" id="fPhone" autocomplete="tel" /></label>
+          <label class="f">Street address<input type="text" id="fAddr" autocomplete="street-address" /></label>
+          <div class="two">
+            <label class="f">City<input type="text" id="fCity" autocomplete="address-level2" /></label>
+            <label class="f">Postal code<input type="text" id="fZip" autocomplete="postal-code" /></label>
+          </div>
+          <label class="f">Country<input type="text" id="fCountry" autocomplete="country-name" /></label>
+
+          <h3>Payment</h3>
+          <label class="pay-opt"><input type="radio" name="pay" value="khqr" checked /> KHQR (scan with any Cambodian
+            banking app)</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="card" /> Credit / debit card</label>
+          <label class="pay-opt"><input type="radio" name="pay" value="cod" /> Cash on delivery</label>
+          <div id="khqrBox" style="text-align:center;margin:10px 0">
+            <img src="./img/khqr.png" alt="KHQR - scan to pay"
+              style="width:min(260px,100%);border-radius:12px;border:1px solid #ddd" />
+            <p style="font-weight:800;font-size:1.1rem;margin-top:10px">Amount to pay: <span id="khqrAmt"></span></p>
+            <p class="hint" style="margin-top:6px">Open your banking app, scan this KHQR, type the amount above, pay,
+              then tap the button below.</p>
+          </div>
+          <div id="cardFields" style="display:none">
+            <label class="f">Card number<input type="text" id="fCard" inputmode="numeric" autocomplete="cc-number"
+                placeholder="1234 5678 9012 3456" /></label>
+            <div class="two">
+              <label class="f">Expiry (MM/YY)<input type="text" id="fExp" inputmode="numeric" autocomplete="cc-exp"
+                  placeholder="MM/YY" maxlength="5" /></label>
+              <label class="f">CVC<input type="text" id="fCvc" inputmode="numeric" autocomplete="cc-csc"
+                  placeholder="123" maxlength="4" /></label>
+            </div>
+          </div>
+          <div class="co-sum" id="coSum"></div>
+          <p id="formErr" role="alert"></p>
+          <button type="submit" class="btn-main" id="payBtn">Pay now</button>
+        </form>
+      </div>
+      <div id="coDone" class="done" style="display:none">
+        <div class="tick">✓</div>
+        <h2>Thank you for your order!</h2>
+        <p id="doneMsg" style="margin:10px 0 20px"></p>
+        <button class="btn-main" id="doneClose" style="max-width:260px;margin:0 auto">Continue shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var KEY = "kpop_cart", SHIP = 1.99, FREE = 100, cart = {}, items = {};
+      try { cart = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { }
+      var $ = function (id) { return document.getElementById(id); };
+      var money = function (n) { return "$" + n.toFixed(2); };
+      function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+      document.querySelectorAll(".cart-toggle").forEach(function (box) {
+        var c = box.nextElementSibling;
+        items[box.id] = {
+          id: box.id, box: box,
+          title: c.querySelector(".product__title").textContent.trim(),
+          img: c.querySelector(".product__img").src,
+          price: parseFloat(c.querySelector(".product__price").textContent.replace(/[^0-9.]/g, ""))
+        };
+      });
+      Object.keys(cart).forEach(function (id) { if (!items[id] || !(cart[id] > 0)) delete cart[id]; });
+
+      function totals() {
+        var sub = 0, count = 0;
+        Object.keys(cart).forEach(function (id) { sub += items[id].price * cart[id]; count += cart[id]; });
+        var ship = (sub === 0 || sub >= FREE) ? 0 : SHIP;
+        return { sub: sub, count: count, ship: ship, total: sub + ship };
+      }
+
+      function render() {
+        var t = totals(), ids = Object.keys(cart);
+        var prev = +$("cartCount").textContent;
+        $("cartCount").textContent = t.count;
+        if (t.count !== prev) { var cb = $("cartBtn"); cb.classList.remove("bump"); void cb.offsetWidth; cb.classList.add("bump"); }
+        Object.keys(items).forEach(function (id) { items[id].box.checked = !!cart[id]; });
+        $("cartItems").innerHTML = ids.length ? ids.map(function (id) {
+          var it = items[id];
+          return '<div class="ci"><img src="' + it.img + '" alt=""><div><p class="ci__t">' + esc(it.title) + '</p>' +
+            '<div class="ci__row"><span>' + money(it.price) + '</span>' +
+            '<span class="ci__q"><button data-id="' + id + '" data-d="-1" aria-label="Decrease">−</button><span>' + cart[id] + '</span><button data-id="' + id + '" data-d="1" aria-label="Increase">+</button></span>' +
+            '<button class="ci__rm" data-id="' + id + '" data-rm="1">Remove</button></div></div></div>';
+        }).join("") : '<p class="cart-empty">Your cart is empty.</p>';
+        $("cSub").textContent = money(t.sub);
+        $("cShip").textContent = t.ship ? money(t.ship) : "Free";
+        $("cTotal").textContent = money(t.total);
+        $("goCheckout").disabled = !ids.length;
+        try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) { }
+      }
+
+      function add(id, q) { cart[id] = (cart[id] || 0) + (q || 1); render(); }
+      function openCart() { $("cartDrawer").classList.add("on"); $("overlay").classList.add("on"); }
+      function closeCart() { $("cartDrawer").classList.remove("on"); $("overlay").classList.remove("on"); }
+      window.Cart = { add: add, open: openCart };
+
+      // "Order Now" buttons (hidden checkbox toggles) -> real cart
+      Object.keys(items).forEach(function (id) {
+        items[id].box.addEventListener("change", function () {
+          if (this.checked) { cart[id] = cart[id] || 1; } else { delete cart[id]; }
+          render();
+        });
+      });
+
+      $("cartBtn").addEventListener("click", function (e) { e.preventDefault(); openCart(); });
+      $("cartClose").onclick = closeCart;
+      $("overlay").onclick = closeCart;
+      $("cartItems").addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-id]"); if (!b) return;
+        var id = b.dataset.id;
+        if (b.dataset.rm) delete cart[id];
+        else { cart[id] += +b.dataset.d; if (cart[id] < 1) delete cart[id]; }
+        render();
+      });
+
+      // ---- Checkout ----
+      function openCheckout() {
+        var t = totals(); if (!t.count) return;
+        closeCart();
+        $("coSum").innerHTML = Object.keys(cart).map(function (id) {
+          return '<div class="l"><span>' + cart[id] + ' × ' + esc(items[id].title) + '</span><span>' + money(items[id].price * cart[id]) + '</span></div>';
+        }).join("") +
+          '<div class="l"><span>Shipping</span><span>' + (t.ship ? money(t.ship) : "Free") + '</span></div>' +
+          '<div class="l"><strong>Total</strong><strong>' + money(t.total) + '</strong></div>';
+        updatePay();
+        $("payBtn").disabled = false;
+        $("formErr").textContent = "";
+        $("coForm").style.display = ""; $("coDone").style.display = "none";
+        $("checkout").classList.add("on"); $("overlay").classList.add("on");
+        document.body.style.overflow = "hidden";
+      }
+      function closeCheckout() {
+        $("checkout").classList.remove("on"); $("overlay").classList.remove("on");
+        document.body.style.overflow = "";
+      }
+      $("goCheckout").onclick = openCheckout;
+      $("coClose").onclick = closeCheckout;
+      $("doneClose").onclick = closeCheckout;
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") { closeCart(); closeCheckout(); } });
+
+      function updatePay() {
+        var m = payMode(), t = totals();
+        $("cardFields").style.display = m === "card" ? "" : "none";
+        $("khqrBox").style.display = m === "khqr" ? "" : "none";
+        $("khqrAmt").textContent = money(t.total);
+        $("payBtn").textContent = m === "khqr" ? "I've paid - place order" : m === "cod" ? "Place order" : "Pay " + money(t.total);
+      }
+      function payMode() { return document.querySelector('input[name="pay"]:checked').value; }
+      document.querySelectorAll('input[name="pay"]').forEach(function (r) {
+        r.onchange = updatePay;
+      });
+      $("fCard").oninput = function () { this.value = this.value.replace(/\D/g, "").slice(0, 19).replace(/(.{4})/g, "$1 ").trim(); };
+      $("fExp").oninput = function () {
+        var d = this.value.replace(/\D/g, "").slice(0, 4);
+        this.value = d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
+      };
+      $("fCvc").oninput = function () { this.value = this.value.replace(/\D/g, ""); };
+
+      function luhn(n) {
+        var sum = 0, alt = false;
+        for (var i = n.length - 1; i >= 0; i--) {
+          var d = +n[i]; if (alt) { d *= 2; if (d > 9) d -= 9; }
+          sum += d; alt = !alt;
+        }
+        return sum % 10 === 0;
+      }
+
+      function validate() {
+        if (!$("fName").value.trim()) return "Please enter your full name.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("fEmail").value.trim())) return "Please enter a valid email address.";
+        if ($("fPhone").value.replace(/\D/g, "").length < 7) return "Please enter a valid phone number.";
+        if (!$("fAddr").value.trim() || !$("fCity").value.trim() || !$("fZip").value.trim() || !$("fCountry").value.trim())
+          return "Please complete your shipping address.";
+        if (payMode() === "card") {
+          var n = $("fCard").value.replace(/\s/g, "");
+          if (n.length < 13 || !luhn(n)) return "That card number doesn't look valid.";
+          var m = $("fExp").value.match(/^(\d{2})\/(\d{2})$/);
+          if (!m || +m[1] < 1 || +m[1] > 12) return "Enter the card expiry as MM/YY.";
+          var now = new Date(), y = 2000 + +m[2];
+          if (y < now.getFullYear() || (y === now.getFullYear() && +m[1] < now.getMonth() + 1)) return "This card has expired.";
+          if (!/^\d{3,4}$/.test($("fCvc").value)) return "Enter the 3 or 4 digit CVC.";
+        }
+        return "";
+      }
+
+      // ---- Telegram: orders are sent straight to your bot ----
+      var TG_TOKEN = "8638587932:AAGFIxB6tVjKebd90zxEo6Rp4epNEn-WX08";   // from @BotFather
+      var TG_CHAT_ID = "1919944940";   // your user id or group id
+
+      function buildTgMessage(o) {
+        var pay = {
+          khqr: "📱 KHQR\n⏳ <i>Awaiting payment check</i>",
+          card: "💳 Credit / debit card",
+          cod: "🚚 Cash on delivery"
+        }[o.payment] || esc(o.payment);
+        var nums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
+        var LINE = "━━━━━━━━━━━━━━━━━━";
+        var qtyTotal = o.items.reduce(function (s, it) { return s + it.qty; }, 0);
+        var L = [];
+
+        L.push("🛍 <b>NEW ORDER</b>");
+        L.push("🧾 <code>" + esc(o.order) + "</code>");
+        L.push("🕒 " + new Date().toLocaleString());
+        L.push(LINE);
+
+        L.push("👤 <b>CUSTOMER</b>");
+        L.push("Name: <b>" + esc(o.name) + "</b>");
+        L.push("📞 " + esc(o.phone));
+        L.push("✉️ " + esc(o.email));
+        L.push("");
+
+        L.push("📍 <b>SHIPPING ADDRESS</b>");
+        L.push(esc(o.address));
+        L.push(esc(o.city) + " " + esc(o.zip));
+        L.push(esc(o.country));
+        L.push(LINE);
+
+        L.push("📦 <b>ITEMS</b> (" + qtyTotal + ")");
+        o.items.forEach(function (it, i) {
+          L.push((nums[i] || "▪️") + " " + esc(it.title));
+          L.push("      " + it.qty + " × " + money(it.price) + " = <b>" + money(it.price * it.qty) + "</b>");
+        });
+        L.push(LINE);
+
+        L.push("💵 <b>SUMMARY</b>");
+        L.push("Subtotal:  " + money(o.subtotal));
+        L.push("Shipping:  " + (o.shipping ? money(o.shipping) : "Free 🎉"));
+        L.push("💰 <b>TOTAL:  " + money(o.total) + "</b>");
+        L.push(LINE);
+
+        L.push("<b>PAYMENT</b>");
+        L.push(pay);
+        return L.join("\n");
+      }
+
+      function sendToTelegram(o) {
+        var addr = [o.address, o.city, o.zip, o.country].filter(Boolean).join(", ");
+        return fetch("https://api.telegram.org/bot" + TG_TOKEN + "/sendMessage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TG_CHAT_ID,
+            text: buildTgMessage(o),
+            parse_mode: "HTML",
+            disable_web_page_preview: true,
+            reply_markup: {
+              inline_keyboard: [[
+                { text: "🗺 Open in Maps", url: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(addr) }
+              ]]
+            }
+          })
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          if (!j.ok) throw new Error(j.description || "Telegram error");
+        });
+      }
+
+      $("checkoutForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var err = validate(); $("formErr").textContent = err;
+        if (err) return;
+        var t = totals(), email = $("fEmail").value.trim(), mode = payMode();
+        var order = "ES-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+        var payload = {
+          order: order,
+          name: $("fName").value.trim(),
+          email: email,
+          phone: $("fPhone").value.trim(),
+          address: $("fAddr").value.trim(),
+          city: $("fCity").value.trim(),
+          zip: $("fZip").value.trim(),
+          country: $("fCountry").value.trim(),
+          payment: mode,   // card number is NEVER sent
+          items: Object.keys(cart).map(function (id) {
+            return { id: id, title: items[id].title, price: items[id].price, qty: cart[id] };
+          }),
+          subtotal: t.sub, shipping: t.ship, total: t.total
+        };
+        $("payBtn").disabled = true; $("payBtn").textContent = "Processing…";
+
+        sendToTelegram(payload)
+          .then(function () {
+            $("doneMsg").innerHTML = "Order <strong>" + order + "</strong> · " + money(t.total) +
+              (mode === "cod" ? " (pay on delivery)" : mode === "khqr" ? " (KHQR payment awaiting confirmation)" : " paid") +
+              "<br>A confirmation will be sent to " + esc(email) + ".";
+            $("coForm").style.display = "none"; $("coDone").style.display = "";
+            $("fCard").value = $("fExp").value = $("fCvc").value = "";
+            cart = {}; render();
+          })
+          .catch(function () {
+            $("formErr").textContent = "Could not send your order. Please check your connection and try again.";
+            $("payBtn").disabled = false; updatePay();
+          });
+      });
+
+      render();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var links = document.querySelectorAll(".nav-links a");
+      function setActive(el) { links.forEach(function (a) { a.classList.toggle("active", a === el); }); }
+
+      // Home: leave the product page (if open) and scroll to the top
+      document.getElementById("navHome").addEventListener("click", function (e) {
+        e.preventDefault();
+        history.pushState("", "", location.pathname);
+        document.body.classList.remove("show-detail");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActive(this);
+      });
+      // Albums / Accessories / Light Sticks: also close the product page first
+      links.forEach(function (a) {
+        if (a.id === "navHome") return;
+        a.addEventListener("click", function () { document.body.classList.remove("show-detail"); setActive(a); });
+      });
+
+      // highlight the nav link for the section being viewed
+      var secs = ["albums", "accessories", "lightsticks"].map(function (id) { return document.getElementById(id); });
+      window.addEventListener("scroll", function () {
+        if (document.body.classList.contains("show-detail")) return;
+        var cur = document.getElementById("navHome");
+        secs.forEach(function (sec, i) { if (sec.getBoundingClientRect().top < innerHeight * 0.4) cur = links[i + 1]; });
+        setActive(cur);
+      }, { passive: true });
+
+      // cards fade/slide in as they scroll into view (staggered per row)
+      var cards = document.querySelectorAll(".album, .accessory, .lightstick");
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var c = en.target;
+            c.style.setProperty("--d", (Array.prototype.indexOf.call(c.parentElement.querySelectorAll(".album, .accessory, .lightstick"), c) % 4) * 0.07 + "s");
+            c.classList.remove("will-reveal"); c.classList.add("reveal-in");
+            io.unobserve(c);
+          });
+        }, { threshold: 0.08 });
+        cards.forEach(function (c) { c.classList.add("will-reveal"); io.observe(c); });
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var input = document.getElementById("searchInput");
+      var main = document.querySelector("main.product-container");
+      var groups = Array.prototype.slice.call(main.querySelectorAll(".kpop"));
+      var empty = document.createElement("div");
+      empty.id = "noResults";
+      main.appendChild(empty);
+
+      function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+      function runSearch() {
+        var raw = input.value.trim(), tokens = raw.toLowerCase().split(/\s+/).filter(Boolean);
+
+        // searching from a product page -> go back to the list
+        if (tokens.length && document.body.classList.contains("show-detail")) {
+          history.pushState("", "", location.pathname);
+          document.body.classList.remove("show-detail");
+        }
+
+        var total = 0;
+        groups.forEach(function (g) {
+          var shown = 0;
+          g.querySelectorAll(".album, .accessory, .lightstick").forEach(function (card) {
+            var text = (card.querySelector(".product__title").textContent + " " +
+              card.querySelector(".product__img").alt + " " +
+              card.querySelector(".product__badge").textContent).toLowerCase();
+            var match = tokens.every(function (t) { return text.indexOf(t) !== -1; });
+            card.classList.toggle("search-hide", !match);
+            if (match) shown++;
+          });
+          g.classList.toggle("search-hide", shown === 0);
+          g.previousElementSibling.classList.toggle("search-hide", shown === 0); // section title
+          total += shown;
+        });
+
+        empty.classList.toggle("on", total === 0);
+        if (total === 0) empty.innerHTML = "No products found for <strong>“" + esc(raw) + "”</strong>.<br>Try another artist, album or keyword.";
+      }
+
+      input.addEventListener("input", runSearch);
+      input.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        runSearch();
+        var first = main.querySelector(".album:not(.search-hide), .accessory:not(.search-hide), .lightstick:not(.search-hide)");
+        if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+        input.blur();
+      });
+    })();
+  </script>
+</body>
+
+</html>
